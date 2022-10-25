@@ -144,26 +144,28 @@ ec2grado(4, 2, 1)  # sin solución
 
 
 ec2grado <- function(a,b,c) {
-  
-  
-  valsqrt <- (b^2 - 4 * a * c)
-  
-  if (valsqrt < 0) {
-    sol <- c("Sin Solución")
+  if (a == 0) {
+    sol <- c("Denominador es 0. No es una ecuación de 2º grado.")
     return(sol)
+  } else {
     
-  } else if (valsqrt > 0) {
-    sol <- c((-b + sqrt(valsqrt)) / (2 * a),(-b - sqrt(valsqrt)) / (2 * a))
-    return(sol)
+    valsqrt <- (b^2 - 4 * a * c)
     
-  } else if (all.equal(0, valsqrt)) {
-    sol <- c((-b + sqrt(valsqrt)) / (2 * a))
-    return(sol)
+    if (valsqrt < 0) {
+      sol <- c("Sin Solución")
+      return(sol)
+      
+    } else if (valsqrt > 0) {
+      sol <- c((-b + sqrt(valsqrt)) / (2 * a),(-b - sqrt(valsqrt)) / (2 * a))
+      return(sol)
+      
+    } else if (all.equal(0, valsqrt)) {
+      sol <- c((-b + sqrt(valsqrt)) / (2 * a))
+      return(sol)
+    }
+    
   }
-
 }
-
-
 ec2grado(4, 4, 0)  # dos soluciones
 ec2grado(1, -2, 1) # una solución
 ec2grado(4, 2, 1)  # sin solución

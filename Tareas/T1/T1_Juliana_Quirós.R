@@ -156,7 +156,7 @@ ec2grado <- function(a,b,c) {
     sol <- c((-b + sqrt(valsqrt)) / (2 * a),(-b - sqrt(valsqrt)) / (2 * a))
     return(sol)
     
-  } else {
+  } else if (all.equal(0, valsqrt)) {
     sol <- c((-b + sqrt(valsqrt)) / (2 * a))
     return(sol)
   }

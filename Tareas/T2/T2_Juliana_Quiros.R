@@ -59,17 +59,25 @@ anon_DNI(12345678)
 ## 
 ## ¿Difieren los archivos datos1.csv y datos2.csv? Responde simplemente sí o no, e incluye el código que permite comprobarlo.  
 
+datos_1 <- read.csv("E:\\GDrive1\\Uni\\Master\\Metod_inf\\Tareas\\T2\\datos1.csv")
+datos_2 <- read.csv("E:\\GDrive1\\Uni\\Master\\Metod_inf\\Tareas\\T2\\datos2.csv")
+identical(datos_1,datos_2)
+
+## Sí difieren
 
 
-
- 
 ## Ejercicio 3 [2 puntos] -----------------------------------------------------  
 ## Indica, para el archivo datos1.csv anterior, 
 ##  * cuántos sujetos tienen algún dato perdido, y 
 ##  * cuántas variables tienen algún dato perdido
 
+## Sujetos
 
+sum(apply (datos_1, MARGIN = 1,  function(x) anyNA(x)))
 
+## Variables
+
+sum(sapply (datos_1, function(x) anyNA(x)))
 
 
 ## Ejercicio 4 [4 puntos] ----------------------------------------------------- 

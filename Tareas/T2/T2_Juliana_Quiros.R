@@ -90,8 +90,16 @@ sum(sapply (datos_1, function(x) anyNA(x)))
 ## * gl: grados de libertad
 ## * p: probabilidad asociada
 
+load("E:\\GDrive1\\Uni\\Master\\Metod_inf\\Tareas\\T2\\lista_t.rda")
+str(lista_t)
+
+nombre <- names(lista_t)
+df_t <- data.frame(nombre)
 
 
+list_flat <- unlist(list_flat)
+media_A <- list_flat["estimate.mean in group A",]
+df_t <- cbind(df_t, media_A)
 
 
 ## Ejercicio 5 [3 puntos] ----------------------------------------------------- ## 

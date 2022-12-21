@@ -34,12 +34,14 @@ c("***4567**", "***4567**")
 
 anon_DNI <- function(dni) {
   dni_mod <- c()
+  ## Pon 0 delante al dni que tenga menos de 9 caracteres
   for (i in dni) {
     if (nchar(i) < 9) {
       i <- paste0("0",i)
     } 
     dni_mod <- append(dni_mod,i)
   }
+  ## Sustituye las posiciones marcadas por asteriscos
   substr(dni_mod,1,3) <- "***"
   substr(dni_mod,8,9) <- "**"
   return(dni_mod)
@@ -92,18 +94,19 @@ sum(sapply (datos_1, function(x) anyNA(x)))
 
 load("E:\\GDrive1\\Uni\\Master\\Metod_inf\\Tareas\\T2\\lista_t.rda")
 
-
+## Extrae los nombres de la lista
 nombre <- names(lista_t)
+## Aplana cada "sublista"
 list_flat <- sapply(lista_t, function(x) unlist(x))
 
-
+## Extrae las filas de la matriz
 media_A <- list_flat["estimate.mean in group A",]
 media_B <- list_flat["estimate.mean in group B",]
 t <- list_flat["statistic.t",]
 gl <- list_flat["parameter.df",]
 p <-  list_flat["p.value",]
 
-
+## Únelas y transforma en data frame
 df_t <- as.data.frame(cbind(nombre, media_A,media_B,t,gl,p)) 
 
 
@@ -127,6 +130,7 @@ df <- data.frame(id = c(1, 4, 2, 5, 3, 6),
 
 
 intercala <- function (df1,df2) {
+  ## Comprueba la clase
   switch(class(df1)[1],
          data.frame = print("df1 es data frame. Continuamos."),
          return("Error: df1 no es data frame.")
@@ -136,20 +140,18 @@ intercala <- function (df1,df2) {
          data.frame = print("df2 es data frame. Continuamos."),
          return("Error: df2 no es data frame.")
   )
+  ## Duplica cada fila de df1
   
-  df <- data.frame()
-  ##df1 <- df1[rep(1:nrow(df1), each = 2), ]
-  for (i in 1:nrow(df1)) {
-    
-    df[i,] = df1[i,]
-    df[i+1,] =df2[i,]
+  df <- df1[rep(1:nrow(df1), each = 2), ]
+  ##Susituye cada fila repetida (posiciones pares) por cada fila de df2
+  for (i in seq(2,nrow(df),by = 2)) {
+    df[i,] = df2[i-(i/2),]
   }
   return(df)
 }
 
 
+
 # Pruebas
 intercala(df1, df2) 
 
-df1 <- matrix()
-df2 <- array()

@@ -91,15 +91,20 @@ sum(sapply (datos_1, function(x) anyNA(x)))
 ## * p: probabilidad asociada
 
 load("E:\\GDrive1\\Uni\\Master\\Metod_inf\\Tareas\\T2\\lista_t.rda")
-str(lista_t)
+
 
 nombre <- names(lista_t)
-df_t <- data.frame(nombre)
+list_flat <- sapply(lista_t, function(x) unlist(x))
 
 
-list_flat <- unlist(list_flat)
 media_A <- list_flat["estimate.mean in group A",]
-df_t <- cbind(df_t, media_A)
+media_B <- list_flat["estimate.mean in group B",]
+t <- list_flat["statistic.t",]
+gl <- list_flat["parameter.df",]
+p <-  list_flat["p.value",]
+
+
+df_t <- as.data.frame(cbind(nombre, media_A,media_B,t,gl,p)) 
 
 
 ## Ejercicio 5 [3 puntos] ----------------------------------------------------- ## 
@@ -118,9 +123,33 @@ df <- data.frame(id = c(1, 4, 2, 5, 3, 6),
                  v2 = c(100, 150, 200, 250, 300, 350))
 # Controla que los argumentos de entrada sean data frames.
 
- 
+
+
+
+intercala <- function (df1,df2) {
+  switch(class(df1)[1],
+         data.frame = print("df1 es data frame. Continuamos."),
+         return("Error: df1 no es data frame.")
+  )
+  
+  switch(class(df2)[1],
+         data.frame = print("df2 es data frame. Continuamos."),
+         return("Error: df2 no es data frame.")
+  )
+  
+  df <- data.frame()
+  ##df1 <- df1[rep(1:nrow(df1), each = 2), ]
+  for (i in 1:nrow(df1)) {
+    
+    df[i,] = df1[i,]
+    df[i+1,] =df2[i,]
+  }
+  return(df)
+}
+
 
 # Pruebas
 intercala(df1, df2) 
 
-
+df1 <- matrix()
+df2 <- array()

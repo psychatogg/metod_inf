@@ -271,13 +271,17 @@ anon_ID <- function(ID) {
 	ID_ofus <- character()
 	## Fase de detección de tipo de ID
 	for(i in ID) {
-		## DNIs (empiezan por número, acaban por letra)
-		if(nchar(i) == 9 && str_starts(i,"[0-9]") && str_ends(i,"[A-Z]")){
+		## DNIs (empiezan por número, acaban por letra, y aseguro a través de la lista de coincidencias que los de en medio también sean números)
+		if(nchar(i) == 9 && str_starts(i,"[0-9]") && str_ends(i,"[A-Z]") && lengths(str_locate_all(i,"[0-9]")) == 16){
 			dni_ofus <- append(dni_ofus,i)
 		}
-		## NIES (empiezan y terminan por letra)
-		else if (nchar(i) == 9 && str_starts(i,"[A-Z]") && str_ends(i,"[A-Z]")) {
+		## NIES (empiezan y terminan por letra, y aseguro a través de la lista de coincidencias que los de en medio también sean números)
+		else if (nchar(i) == 9 && str_starts(i,"[A-Z]") && str_ends(i,"[A-Z]") && lengths(str_locate_all(i,"[0-9]")) == 14) {
 			nie_ofus <- append(nie_ofus,i)
+		}
+		## Pasaportes (empiezan por letra, terminan por número)
+		else if (nchar(i) == 9 && str_starts(i,"[A-Z]") && str_ends(i,"[0-9]")) {
+			pass_ofus <- append(pass_ofus,i)
 		}
 		
 		
@@ -291,6 +295,10 @@ anon_ID <- function(ID) {
 		substr(nie_ofus,1,4) <- "****"
 		substr(nie_ofus,9,9) <- "*"
 		
+		##Pasaportes
+		substr(pass_ofus,1,5) <- "*****"
+		
+		
 	##Combina todas las IDs
 	ID_ofus <- append(ID_ofus,dni_ofus)
 	ID_ofus <- append(ID_ofus,nie_ofus)
@@ -300,13 +308,6 @@ anon_ID <- function(ID) {
 
 
 
-
-
-
-} else if (nchar(i) == 9 && str_detect(i,"[A-Z]")) {
-	i <- str_replace_all(i,"[A-Z]","*")
-	pass_ofus <- append(pass_ofus,i)
-}
 
 
 

@@ -268,6 +268,9 @@ anon_ID <- function(ID) {
 	dni_ofus <- character()
 	nie_ofus <- character()
 	pass_ofus <- character()
+	otros1_ofus <- character()
+	otros2_ofus <- character()
+	otros3_ofus <- character()
 	ID_ofus <- character()
 	## Fase de detección de tipo de ID
 	for(i in ID) {
@@ -279,29 +282,58 @@ anon_ID <- function(ID) {
 		else if (nchar(i) == 9 && str_starts(i,"[A-Z]") && str_ends(i,"[A-Z]") && lengths(str_locate_all(i,"[0-9]")) == 14) {
 			nie_ofus <- append(nie_ofus,i)
 		}
-		## Pasaportes (empiezan por letra, terminan por número)
-		else if (nchar(i) == 9 && str_starts(i,"[A-Z]") && str_ends(i,"[0-9]")) {
+		## Pasaportes (empiezan por letra, terminan por número, y aseguro a través de la lista de coincidencias que los de en medio también sean números)
+		else if (nchar(i) == 9 && str_starts(i,"[A-Z]") && str_ends(i,"[0-9]") && lengths(str_locate_all(i,"[0-9]")) == 12)  {
 			pass_ofus <- append(pass_ofus,i)
 		}
-		
-		
+		## Otros 1  (pto 4, al menos 7 dígitos numéricos, sin letras)
+		else if (lengths(str_locate_all(i,"[0-9]")) >= 14 && !(str_detect(i,"[A-Z]"))) {
+			otros1_ofus <- append(otros1_ofus,i)
+		}
+		## Otros 2  (pto 4, al menos 7 dígitos numéricos, con letras)
+		else if (lengths(str_locate_all(i,"[0-9]")) >= 14 && (str_detect(i,"[A-Z]"))) {
+			otros2_ofus <- append(otros2_ofus,i)
+		}
+		## Otros 3 (Pto 5)
+		else if (lengths(str_locate_all(i,"[0-9]")) < 14){
+			otros3_ofus <- append(otros3_ofus,i)
+		}
 	}
 	## Fase de ofuscación de dígitos de cada tipo de documento
-		##DNIS
+		## DNIS
 		substr(dni_ofus,1,3) <- "***"
 		substr(dni_ofus,8,9) <- "**"
 		
-		##NIEs
+		## NIEs
 		substr(nie_ofus,1,4) <- "****"
 		substr(nie_ofus,9,9) <- "*"
 		
-		##Pasaportes
+		## Pasaportes
 		substr(pass_ofus,1,5) <- "*****"
+		
+		
+		## Otros 1
+		substr(otros1_ofus,1,3) <- "***"
+		
+		substr(otros1_ofus,8,9) <- "**"
+	
+		
+		## Otros 2 (tengo que saber dónde empiezan las letras para conocer la posición de los números)
+		## substr(otros2_ofus,) <- "***"
+		
+		## substr(otros2_ofus,) <- "**"
+		
+		## Otros 3
+		substr(otros3_ofus,1,5) <- "*****"
 		
 		
 	##Combina todas las IDs
 	ID_ofus <- append(ID_ofus,dni_ofus)
 	ID_ofus <- append(ID_ofus,nie_ofus)
+	ID_ofus <- append(ID_ofus,pass_ofus)
+	ID_ofus <- append(ID_ofus,otros1_ofus)
+	
+	ID_ofus <- append(ID_ofus,otros3_ofus)
 	
 	return(ID_ofus)
 }

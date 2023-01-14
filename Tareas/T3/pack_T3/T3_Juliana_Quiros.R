@@ -285,7 +285,7 @@ anon_ID <- function(ID) {
 	## Fase de ofuscación de dígitos de cada tipo de documento
 		##DNIS
 		substr(dni_ofus,1,3) <- "***"
-		substr(dni_ofus,8,9) <- "***"
+		substr(dni_ofus,8,9) <- "**"
 		
 		##NIEs
 		substr(nie_ofus,1,4) <- "****"

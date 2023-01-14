@@ -269,9 +269,11 @@ anon_ID <- function(ID) {
 	nie_ofus <- character()
 	pass_ofus <- character()
 	otros1_ofus <- character()
+	otros1_ofus_limpia <- character()
 	otros2_ofus <- character()
 	otros2_ofus_limpia <- character()
 	otros3_ofus <- character()
+	otros3_ofus_limpia <- character()
 	ID_ofus <- character()
 	## Fase de detección de tipo de ID
 	for(i in ID) {
@@ -315,9 +317,12 @@ anon_ID <- function(ID) {
 		
 		
 		## Otros 1
-		substr(otros1_ofus,1,3) <- "***"
-		
-		substr(otros1_ofus,8,9) <- "**"
+		for(n in otros1_ofus) {
+			substr(n,1,3) <- "***"
+			substr(n,8,nchar(n)) <- "********" ## Estos números de asteriscos son lo suficientemente grandes como para cubrir cualquier secuencia de dígitos
+			otros1_ofus_limpia <- append(otros1_ofus_limpia,n)
+		}
+	
 	
 		
 		## Otros 2 (tengo que saber dónde empiezan las letras y los números para poder extraer las posiciones a ofuscar)
@@ -326,7 +331,7 @@ anon_ID <- function(ID) {
 			letras_comienzo <- str_locate(k,"[A-Z]") [[1]]
 			numeros_comienzo <- str_locate(k,"[0-9]") [[1]]
 			substr(k,letras_comienzo,numeros_comienzo-1) <-"******"
-			substr(k,numeros_comienzo,numeros_comienzo+2) <-"********" ## Estos números de asteriscos son lo suficientemente grande como para cubrir cualquier secuencia de dígitos 
+			substr(k,numeros_comienzo,numeros_comienzo+2) <-"********" ## Estos números de asteriscos son lo suficientemente grandes como para cubrir cualquier secuencia de dígitos 
 			substr(k,(numeros_comienzo+7),nchar(k)) <-"*******"
 			otros2_ofus_limpia <- append(otros2_ofus_limpia,k)
 		}
@@ -334,16 +339,20 @@ anon_ID <- function(ID) {
 		
 		
 		## Otros 3
-		substr(otros3_ofus,1,5) <- "*****"
+		for(w in otros3_ofus) {
+			substr(w,1,nchar(w)-4) <- "*****"
+			otros3_ofus_limpia <- append(otros3_ofus_limpia,w)
+		}
 		
 		
-	##Combina todas las IDs (el orden varía respecto a la original) : 
+		
+	##Combina todas las IDs (el orden de salida varía respecto a la original) : 
 	ID_ofus <- append(ID_ofus,dni_ofus)
 	ID_ofus <- append(ID_ofus,nie_ofus)
 	ID_ofus <- append(ID_ofus,pass_ofus)
-	ID_ofus <- append(ID_ofus,otros1_ofus)
+	ID_ofus <- append(ID_ofus,otros1_ofus_limpia)
 	ID_ofus <- append(ID_ofus,otros2_ofus_limpia)
-	ID_ofus <- append(ID_ofus,otros3_ofus)
+	ID_ofus <- append(ID_ofus,otros3_ofus_limpia)
 	
 	return(ID_ofus)
 }

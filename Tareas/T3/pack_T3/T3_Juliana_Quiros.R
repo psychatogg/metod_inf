@@ -265,17 +265,54 @@ intercala_N(df_T1, df_T2, df_T3, df_T4, df_T5, nombres = "T")
 library(stringr)
 
 anon_ID <- function(ID) {
-  ID_grande <- c()
-  for(i in ID) {
-    if(nchar(i) >= 7) {
-      ID_grande <- append(ID_grande, i)
-      
-    }
-    
-  }
-  return(ID_grande)
+	dni_ofus <- character()
+	nie_ofus <- character()
+	pass_ofus <- character()
+	ID_ofus <- character()
+	## Fase de detección de tipo de ID
+	for(i in ID) {
+		## DNIs (empiezan por número, acaban por letra)
+		if(nchar(i) == 9 && str_starts(i,"[0-9]") && str_ends(i,"[A-Z]")){
+			dni_ofus <- append(dni_ofus,i)
+		}
+		## NIES (empiezan y terminan por letra)
+		else if (nchar(i) == 9 && str_starts(i,"[A-Z]") && str_ends(i,"[A-Z]")) {
+			nie_ofus <- append(nie_ofus,i)
+		}
+		
+		
+	}
+	## Fase de ofuscación de dígitos de cada tipo de documento
+		##DNIS
+		substr(dni_ofus,1,3) <- "***"
+		substr(dni_ofus,8,9) <- "***"
+		
+		##NIEs
+		substr(nie_ofus,1,4) <- "****"
+		substr(nie_ofus,9,9) <- "*"
+		
+	##Combina todas las IDs
+	ID_ofus <- append(ID_ofus,dni_ofus)
+	ID_ofus <- append(ID_ofus,nie_ofus)
+	
+	return(ID_ofus)
 }
-    
+
+
+
+
+
+
+} else if (nchar(i) == 9 && str_detect(i,"[A-Z]")) {
+	i <- str_replace_all(i,"[A-Z]","*")
+	pass_ofus <- append(pass_ofus,i)
+}
+
+
+
+
+
+
 # PUNTO 1: Dado un DNI con formato 12345678X, se publicarán los dígitos que en el formato que ocupen las posiciones cuarta, quinta, sexta y séptima. En el ejemplo: ***4567**.
 
 

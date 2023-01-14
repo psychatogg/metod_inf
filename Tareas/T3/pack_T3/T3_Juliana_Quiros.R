@@ -270,6 +270,7 @@ anon_ID <- function(ID) {
 	pass_ofus <- character()
 	otros1_ofus <- character()
 	otros2_ofus <- character()
+	otros2_ofus_limpia <- character()
 	otros3_ofus <- character()
 	ID_ofus <- character()
 	## Fase de detección de tipo de ID
@@ -293,6 +294,7 @@ anon_ID <- function(ID) {
 		## Otros 2  (pto 4, al menos 7 dígitos numéricos, con letras)
 		else if (lengths(str_locate_all(i,"[0-9]")) >= 14 && (str_detect(i,"[A-Z]"))) {
 			otros2_ofus <- append(otros2_ofus,i)
+		
 		}
 		## Otros 3 (Pto 5)
 		else if (lengths(str_locate_all(i,"[0-9]")) < 14){
@@ -318,21 +320,29 @@ anon_ID <- function(ID) {
 		substr(otros1_ofus,8,9) <- "**"
 	
 		
-		## Otros 2 (tengo que saber dónde empiezan las letras para conocer la posición de los números)
-		## substr(otros2_ofus,) <- "***"
+		## Otros 2 (tengo que saber dónde empiezan las letras y los números para poder extraer las posiciones a ofuscar)
 		
-		## substr(otros2_ofus,) <- "**"
+		for(k in otros2_ofus) {
+			letras_comienzo <- str_locate(k,"[A-Z]") [[1]]
+			numeros_comienzo <- str_locate(k,"[0-9]") [[1]]
+			substr(k,letras_comienzo,numeros_comienzo-1) <-"******"
+			substr(k,numeros_comienzo,numeros_comienzo+2) <-"********" ## Estos números de asteriscos son lo suficientemente grande como para cubrir cualquier secuencia de dígitos 
+			substr(k,(numeros_comienzo+7),nchar(k)) <-"*******"
+			otros2_ofus_limpia <- append(otros2_ofus_limpia,k)
+		}
+		
+		
 		
 		## Otros 3
 		substr(otros3_ofus,1,5) <- "*****"
 		
 		
-	##Combina todas las IDs
+	##Combina todas las IDs (el orden varía respecto a la original) : 
 	ID_ofus <- append(ID_ofus,dni_ofus)
 	ID_ofus <- append(ID_ofus,nie_ofus)
 	ID_ofus <- append(ID_ofus,pass_ofus)
 	ID_ofus <- append(ID_ofus,otros1_ofus)
-	
+	ID_ofus <- append(ID_ofus,otros2_ofus_limpia)
 	ID_ofus <- append(ID_ofus,otros3_ofus)
 	
 	return(ID_ofus)
